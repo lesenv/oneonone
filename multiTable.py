@@ -41,28 +41,28 @@ class OnTerminal(OnScreen):
 
 # abstracting different mathematical problems
 class Math(Protocol):
-    def new_task():
-        # return new list [given, solution]
+    def new_task() -> None:
+        # stores in self.: givens, solution
         ...
-    def get_answer():
+    def get_question() -> str:
+        # return problemquestion as text
+        ...
+    def is_correct(self, guess: int):
         #return bool wether the answer was correct
         ...
 
 class Mulitplier(Math):
     def new_task(self, i : int = 1, j : int = 10):
-        a = random.randint(i, j)
-        b = random.randint(i, j)
-        self.answer = a*b
-        return [a, b], a*b
+        self.a = random.randint(i, j)
+        self.b = random.randint(i, j)
+        self.solution = self.a*self.b
+        return
     
-    def get_answer(self, args):
-        [a, b], c = args
-        d = input(f"{a} * {b} = ")
-        try:
-            e = int(d)
-        except ValueError:
-            raise
-        return e == c
+    def get_question(self):
+        return(f"{self.a} * {self.b} = ")
+    
+    def is_correct(self, guess: int):
+        return guess == self.solution
 
 class Division(Math):
     pass
@@ -102,16 +102,16 @@ class Game:
         for p in self.people:
             self.active_player = p
             self.print_header()
-            new = self.math.new_task()
+            self.math.new_task()
             for i in range(3):
                 try:
-                    q = self.math.get_answer(new)
+                    q = int(self.writer.get_input(self.math.get_question()))
                 except ValueError as e:
                     if e == "zzz": self.play = False
                     elif e == "ppp": self.addPerson()
                     else: raise
                 # if right answer, get a life
-                if q:
+                if self.math.is_correct(q):
                     p.add_life()
                     break
                 # if after three false guesses removing a life
