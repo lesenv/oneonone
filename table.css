@@ -1,0 +1,17 @@
+div {
+    color: white;
+    background-color: blue;
+    border: 4 4 1 1 solid red;
+    display: inline-flex;
+
+}
+
+#Aufgabe {
+    padding: 5px;
+    align-content: center;
+    display: block;
+}
+
+body {
+    align-items: center;
+}

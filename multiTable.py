@@ -52,7 +52,8 @@ class Game:
     def new_task(self):
         a = random.randint(1,10)
         b = random.randint(1,10)
-        return [a, b]
+        c = a*b
+        return [a, b, c]
 
     def print_header(self):
         subprocess.call('cls' if os.name == 'nt' else 'clear')
@@ -63,15 +64,15 @@ class Game:
         return
     
     def print_task(self, args):
-        a, b = args
-        c = input(f"{a} * {b} = ")
+        a, b, c = args
+        d = input(f"{a} * {b} = ")
         try:
-            d = int(c)
+            e = int(d)
         except ValueError:
-            if c == "zzz": self.play = False
-            elif c == "ppp": self.addPerson()
+            if d == "zzz": self.play = False
+            elif d == "ppp": self.addPerson()
             return False
-        return d == a*b
+        return e == a*b
     
     def loop_start(self):
         for p in self.people:
@@ -80,11 +81,20 @@ class Game:
             new = self.new_task()
             for i in range(3):
                 q = self.print_task(new)
-                if q or not self.play:
+                # if right answer, get a life
+                if q:
                     p.add_life()
                     break
-                if i==2 and not q:
+                # if after three false guesses removing a life
+                elif i==2:
                     p.rem_life()
+                # if stopped to play (during game), remove the player
+                if not self.play:
+                    self.people.remove(p)
+                    # as lond as there is at least one person left, continue to play
+                    if self.people:
+                        self.play = True
+                    break
             
 
 
