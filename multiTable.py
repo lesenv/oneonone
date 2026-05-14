@@ -2,6 +2,8 @@
 import subprocess, os
 import random
 
+WIN_CONDITION = 10
+
 # mit 5 Leben starten
 class Person:
     def __init__(self):
@@ -74,6 +76,14 @@ class Game:
             return False
         return e == a*b
     
+    def win(self, p: Person):
+        print(f"YEEAAHH, {p.get_name()} hat gewonnen!!")
+        self.play = False
+
+    def lose(self, p: Person):
+        print(f"Leider hat {p.get_name()} keine Leben mehr...")
+        self.people.remove(p)
+
     def loop_start(self):
         for p in self.people:
             self.active_player = p
@@ -84,10 +94,14 @@ class Game:
                 # if right answer, get a life
                 if q:
                     p.add_life()
+                    if p.get_lives() == WIN_CONDITION:
+                        self.win(p)
                     break
-                # if after three false guesses removing a life
+                # if after three false guesses remove a life
                 elif i==2:
                     p.rem_life()
+                    if p.get_lives() == 0:
+                        self.lose(p)
                 # if stopped to play (during game), remove the player
                 if not self.play:
                     self.people.remove(p)
