@@ -1,6 +1,7 @@
 # 1x1 program
 import subprocess, os
 import random
+from abc import ABC
 
 # mit 5 Leben starten
 class Person:
@@ -23,24 +24,41 @@ class Person:
     def rem_life(self):
         self.lives -= 1
         
-        
-# show multiply-task
-def show_task():
-    a = random.randint(1, 10)
-    b = random.randint(1, 10)
-    print(f"{a} x {b} = ?")
-    return a * b
+class Math(ABC):
+    def new_task():
+        # return new list [given, solution]
+        ...
+    def get_answer():
+        #return bool wether the answer was correct
+        ...
+
+class Mulitplier(Math):
+    def new_task(self, i : int = 1, j : int = 10):
+        a = random.randint(i, j)
+        b = random.randint(i, j)
+        return [[a, b], a*b]
+    
+    def get_answer(self, args):
+        [a, b], c = args
+        d = input(f"{a} * {b} = ")
+        try:
+            e = int(d)
+        except ValueError:
+            raise
+        return e == c
+
 
 # asking 3 times if the answer was wrong
 # richtige Antwort: +1 Leben
 # falsche Antwort: -1 Leben gewonnen
 # bei 0 Leben verloren, bei 10 
 class Game:
-    def __init__(self):
+    def __init__(self, math):
         self.people = []
         self.addPerson()
 
         self.play = True
+        self.math = math
 
         while self.play:
             self.loop_start()
@@ -48,12 +66,6 @@ class Game:
     def addPerson(self):
         new_person = Person()
         self.people.append(new_person)
-
-    def new_task(self):
-        a = random.randint(1,10)
-        b = random.randint(1,10)
-        c = a*b
-        return [a, b, c]
 
     def print_header(self):
         subprocess.call('cls' if os.name == 'nt' else 'clear')
@@ -63,24 +75,18 @@ class Game:
         print(f"================")
         return
     
-    def print_task(self, args):
-        a, b, c = args
-        d = input(f"{a} * {b} = ")
-        try:
-            e = int(d)
-        except ValueError:
-            if d == "zzz": self.play = False
-            elif d == "ppp": self.addPerson()
-            return False
-        return e == a*b
-    
     def loop_start(self):
         for p in self.people:
             self.active_player = p
             self.print_header()
-            new = self.new_task()
+            new = self.math.new_task()
             for i in range(3):
-                q = self.print_task(new)
+                try:
+                    q = self.math.get_answer(new)
+                except ValueError as e:
+                    if e == "zzz": self.play = False
+                    elif e == "ppp": self.addPerson()
+                    else: raise
                 # if right answer, get a life
                 if q:
                     p.add_life()
@@ -91,7 +97,7 @@ class Game:
                 # if stopped to play (during game), remove the player
                 if not self.play:
                     self.people.remove(p)
-                    # as lond as there is at least one person left, continue to play
+                    # as long as there is at least one person left, continue to play
                     if self.people:
                         self.play = True
                     break
@@ -99,4 +105,5 @@ class Game:
 
 
 if __name__ == "__main__":
-    g = Game()
+    mult = Mulitplier()
+    g = Game(mult)
