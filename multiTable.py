@@ -1,16 +1,17 @@
 # 1x1 program
 import subprocess, os
 import random
-from abc import ABC
+from typing import Protocol
+from abc import abstractmethod
 
 # mit 5 Leben starten
 class Person:
-    def __init__(self):
+    def __init__(self, name):
         self.lives = 5
-        self.set_name()
+        self.set_name(name)
 
-    def set_name(self):
-        self.name = input("Wie heißt Du?")
+    def set_name(self, name):
+        self.name = name
 
     def get_name(self):
         return self.name
@@ -23,8 +24,23 @@ class Person:
 
     def rem_life(self):
         self.lives -= 1
-        
-class Math(ABC):
+
+# seperating terminal and browser and so forth
+class OnScreen(Protocol):
+    @abstractmethod
+    def write_on(self, msg: str) -> None: ...
+    @abstractmethod
+    def get_input(self, msg: str = "") -> str: ...
+
+class OnTerminal(OnScreen):
+    def write_on(self, msg: str):
+        print(msg)
+
+    def get_input(self,msg: str = "") -> str:
+        return input(msg)
+
+# abstracting different mathematical problems
+class Math(Protocol):
     def new_task():
         # return new list [given, solution]
         ...
@@ -36,7 +52,8 @@ class Mulitplier(Math):
     def new_task(self, i : int = 1, j : int = 10):
         a = random.randint(i, j)
         b = random.randint(i, j)
-        return [[a, b], a*b]
+        self.answer = a*b
+        return [a, b], a*b
     
     def get_answer(self, args):
         [a, b], c = args
@@ -47,32 +64,38 @@ class Mulitplier(Math):
             raise
         return e == c
 
+class Division(Math):
+    pass
+
 
 # asking 3 times if the answer was wrong
 # richtige Antwort: +1 Leben
 # falsche Antwort: -1 Leben gewonnen
 # bei 0 Leben verloren, bei 10 
 class Game:
-    def __init__(self, math):
+    def __init__(self, math, writer):
+        self.math = math
+        self.writer = writer
+
         self.people = []
         self.addPerson()
 
         self.play = True
-        self.math = math
-
         while self.play:
             self.loop_start()
 
     def addPerson(self):
-        new_person = Person()
+        name =  self.writer.get_input("Wie heißt Du?")
+        new_person = Person(name)
         self.people.append(new_person)
 
     def print_header(self):
         subprocess.call('cls' if os.name == 'nt' else 'clear')
-        print(f"\n1x1-Übungen    -  Schluss mit 'zzz', 'ppp' ist neuer Spieler")
+        self.writer.write_on(f"\n1x1-Übungen    -  Schluss mit 'zzz', 'ppp' ist neuer Spieler")
         for p in self.people:
-            print(">" if p is self.active_player else " ", p.get_name(), "\t", "O"*p.get_lives())
-        print(f"================")
+            line = "".join([">" if p is self.active_player else " ", p.get_name(), "\t", "O"*p.get_lives()])
+            self.writer.write_on(line)
+        self.writer.write_on(f"================")
         return
     
     def loop_start(self):
@@ -106,4 +129,5 @@ class Game:
 
 if __name__ == "__main__":
     mult = Mulitplier()
-    g = Game(mult)
+    writer = OnTerminal()
+    g = Game(mult, writer)
