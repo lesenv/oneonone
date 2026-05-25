@@ -33,10 +33,27 @@ class OnScreen(Protocol):
     def get_input(self, msg: str = "") -> str: ...
 
 class OnTerminal(OnScreen):
-    def write_on(self, msg: str):
+    def print_header(self) -> None:
+        subprocess.call('cls' if os.name == 'nt' else 'clear')
+        self.write_on(f"\n1x1-Übungen    -  Schluss mit 'zzz', 'ppp' ist neuer Spieler")
+        self.write_seperate_line()
+        return
+    
+    def write_seperate_line(self) -> None:
+        self.write_on(f"================")
+    
+    def print_people(self, people: list[Person], active_player: Person) -> None:
+        for p in people:
+            line = "".join([">" if p is active_player else " ", p.get_name(), "\t", "O"*p.get_lives()])
+            self.write_on(line)
+        self.write_seperate_line()
+            
+    
+    def write_on(self, msg: str) -> None:
         print(msg)
 
     def get_input(self,msg: str = "") -> str:
+        print(msg)
         return input(msg)
 
 # abstracting different mathematical problems
@@ -89,19 +106,11 @@ class Game:
         new_person = Person(name)
         self.people.append(new_person)
 
-    def print_header(self):
-        subprocess.call('cls' if os.name == 'nt' else 'clear')
-        self.writer.write_on(f"\n1x1-Übungen    -  Schluss mit 'zzz', 'ppp' ist neuer Spieler")
-        for p in self.people:
-            line = "".join([">" if p is self.active_player else " ", p.get_name(), "\t", "O"*p.get_lives()])
-            self.writer.write_on(line)
-        self.writer.write_on(f"================")
-        return
-    
     def loop_start(self):
         for p in self.people:
             self.active_player = p
-            self.print_header()
+            self.writer.print_header()
+            self.writer.print_people(self.people, self.active_player)
             self.math.new_task()
             for i in range(3):
                 try:
