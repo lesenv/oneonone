@@ -60,5 +60,17 @@ class TestMathFunction(ut.TestCase):
 ##            mathe.get_2_ints(3, "nuiiad")
   #      self.assertEqual('b has to be a number', str(cm.exception))
 
+class TestViewerTerminal(ut.TestCase):
+    
+    def setUp(self):
+        self.viewer = mathe.Terminal()
+
+    def test_output_print_header(self):
+        out = self.viewer.print_header()
+        check = ["1x1-Übungen    -  Schluss mit 'zzz', 'ppp' ist neuer Spieler",
+                 "================"
+                ]
+        self.assertEqual(out, check)
+
 if __name__ == "__main__":
     ut.main()
