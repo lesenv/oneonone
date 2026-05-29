@@ -33,6 +33,9 @@ class Terminal(Viewer):
         self.write_on(self.header())
         self.write_on()
 
+    def print_Aufgabe(self, Aufgabe: list = []) -> None:
+        print(f"{}{}{} = "*Aufgabe)
+
 class Aufgabe(Protocol):
     symbol: str
 
@@ -55,9 +58,11 @@ class Multiplizieren(Aufgabe):
         return self.a*self.b
 
 def main():
-    MioApril2024 = Multiplizieren()
-    MioApril2024.make_Aufgabe()
-    print(MioApril2024.get_result())
+    Aufgabe = Multiplizieren()
+    viewer = Terminal()
+    while True:
+        Aufgabe.make_Aufgabe()
+        viewer.get_input(Aufgabe.make_Aufgabe())
 
 if __name__ == "__main__":
     main()
