@@ -66,7 +66,7 @@ class TestViewerTerminal(ut.TestCase):
         self.viewer = mathe.Terminal()
 
     def test_output_print_header(self):
-        out = self.viewer.print_header()
+        out = self.viewer.header()
         check = ["1x1-Übungen    -  Schluss mit 'zzz', 'ppp' ist neuer Spieler",
                  "================"
                 ]
