@@ -2,6 +2,7 @@ import unittest as ut
 import mathe
 import random
 from typing import Protocol
+from  mock import patch
 
 random.seed(1)
 
@@ -71,6 +72,12 @@ class TestViewerTerminal(ut.TestCase):
                  "================"
                 ]
         self.assertEqual(out, check)
+
+    ## testing the conversion from string to int
+    @patch("builtins.input", lambda _: "10")
+    def test_get_input(self):
+        out = self.viewer.get_input("gsuiij")
+        self.assertEqual(out, 10)
 
 if __name__ == "__main__":
     ut.main()
