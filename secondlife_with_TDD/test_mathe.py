@@ -79,5 +79,9 @@ class TestViewerTerminal(ut.TestCase):
         out = self.viewer.get_input("gsuiij")
         self.assertEqual(out, 10)
 
+    def test_get_Aufgabe(self):
+        out = self.viewer.get_Aufgabe([45,"*",67])
+        self.assertEqual(out, "45 * 67 = ")
+
 if __name__ == "__main__":
     ut.main()

@@ -15,6 +15,8 @@ class Viewer(Protocol):
 
 class Terminal(Viewer):
     def write_on(self, txt_list: list[str]) -> None:
+        # only method to print
+        # all the others are returning the strings
         print(f"{txt}\n" for txt in txt_list)
     
     def header(self) -> str:
@@ -33,8 +35,8 @@ class Terminal(Viewer):
         self.write_on(self.header())
         self.write_on()
 
-    def print_Aufgabe(self, Aufgabe: list = []) -> None:
-        print(f"{}{}{} = "*Aufgabe)
+    def get_Aufgabe(self, Aufgabe: list = []) -> str:
+        return("{} {} {} = ".format(*Aufgabe))
 
 class Aufgabe(Protocol):
     symbol: str
@@ -60,9 +62,11 @@ class Multiplizieren(Aufgabe):
 def main():
     Aufgabe = Multiplizieren()
     viewer = Terminal()
-    while True:
-        Aufgabe.make_Aufgabe()
-        viewer.get_input(Aufgabe.make_Aufgabe())
+    new_Aufgabe = True
+    while new_Aufgabe:
+        Aufgabe = Aufgabe.make_Aufgabe()
+        viewer.get_input(viewer.get_Aufgabe(Aufgabe))
+        new_Aufgabe = False
 
 if __name__ == "__main__":
     main()
