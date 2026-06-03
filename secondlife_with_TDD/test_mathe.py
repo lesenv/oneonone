@@ -16,18 +16,18 @@ class TestMultiplizieren(ut.TestCase, Aufgabe):
 
     def setUp(self):
         self.tst = mathe.Multiplizieren()
-        self.newAufgabe = self.tst.make_Aufgabe()
+        self.new_task = self.tst.make_task()
         return super().setUp()
 
     def test_symbol(self):
         self.assertEqual(self.tst.symbol, "x")
 
-    def test_make_Aufgabe(self):
-        self.assertEqual(self.newAufgabe, [1, "x", 7] )
+    def test_make_task(self):
+        self.assertEqual(self.new_task, [2, "x", 8] )
 
     def test_get_result(self):
-        '''6x3 = 18'''
-        self.assertEqual(self.tst.get_result(), 18)
+        '''7x4 = 28'''
+        self.assertEqual(self.tst.get_result(), 28)
 
 
 class TestMathFunction(ut.TestCase):
@@ -79,8 +79,8 @@ class TestViewerTerminal(ut.TestCase):
         out = self.viewer.get_input("gsuiij")
         self.assertEqual(out, 10)
 
-    def test_get_Aufgabe(self):
-        out = self.viewer.get_Aufgabe([45,"*",67])
+    def test_get_task(self):
+        out = self.viewer.get_task([45,"*",67])
         self.assertEqual(out, "45 * 67 = ")
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 import random
 from typing import Protocol
-from dataclasses import dataclass
+#from dataclasses import dataclass
 from abc import abstractmethod
 
 def get_2_ints(_from: int = 1, _to: int = 10) -> list[int]:
@@ -9,12 +9,12 @@ def get_2_ints(_from: int = 1, _to: int = 10) -> list[int]:
 
 class Viewer(Protocol):
     @abstractmethod
-    def write_on(self) -> None: ...
+    def output(self) -> None: ...
     @abstractmethod
     def get_input(self) -> int:...
 
 class Terminal(Viewer):
-    def write_on(self, txt_list: list[str]) -> None:
+    def output(self, txt_list: list[str]) -> None:
         # only method to print
         # all the others are returning the strings
         print(f"{txt}\n" for txt in txt_list)
@@ -32,27 +32,27 @@ class Terminal(Viewer):
         return int(input(txt))
     
     def start(self) -> None:
-        self.write_on(self.header())
-        self.write_on()
+        self.output(self.header())
+        self.output()
 
-    def get_Aufgabe(self, Aufgabe: list = []) -> str:
-        return("{} {} {} = ".format(*Aufgabe))
+    def get_task(self, task: list = []) -> str:
+        return("{} {} {} = ".format(*task))
 
-class Aufgabe(Protocol):
+class Task(Protocol):
     symbol: str
 
     @abstractmethod
-    def make_Aufgabe(self) -> list:
+    def make_task(self) -> list:
         ...
     @abstractmethod
     def get_result(self) -> int:
         ...
 
-class Multiplizieren(Aufgabe):
+class Multiplizieren(Task):
     def __init__(self):
         self.symbol = "x"
 
-    def make_Aufgabe(self, _from: int = 0, _to: int = 9):
+    def make_task(self, _from: int = 1, _to: int = 10):
         self.a, self.b = get_2_ints(_from, _to)
         return [self.a, self.symbol, self.b]
     
@@ -60,13 +60,13 @@ class Multiplizieren(Aufgabe):
         return self.a*self.b
 
 def main():
-    Aufgabe = Multiplizieren()
+    multi = Multiplizieren()
     viewer = Terminal()
-    new_Aufgabe = True
-    while new_Aufgabe:
-        Aufgabe = Aufgabe.make_Aufgabe()
-        viewer.get_input(viewer.get_Aufgabe(Aufgabe))
-        new_Aufgabe = False
+    anotherone = True
+    while anotherone:
+        new_mult_task = multi.make_task()
+        viewer.get_input(viewer.get_task(new_mult_task))
+        anotherone = False
 
 if __name__ == "__main__":
     main()
