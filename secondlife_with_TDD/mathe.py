@@ -7,6 +7,11 @@ def get_2_ints(_from: int = 1, _to: int = 10) -> list[int]:
     if _from > _to: _from, _to = _to, _from
     return [random.randint(_from, _to), random.randint(_from, _to)]
 
+class Person():
+    def __init__(self, viewer):
+        self.points = 5
+        self.name = self.get_name(viewer)
+
 class Viewer(Protocol):
     @abstractmethod
     def output(self) -> None: ...
@@ -58,14 +63,21 @@ class Multiplizieren(Task):
     
     def get_result(self):
         return self.a*self.b
+    
+def get_answer_3_times(viewer, tasker):
+    new_mult_task = tasker.make_task()
+    for _ in range(3):
+        ans = viewer.get_input(viewer.get_task(new_mult_task))
+        if ans == tasker.get_result():
+            return True
+    return False
 
 def main():
-    multi = Multiplizieren()
+    tasker = Multiplizieren()
     viewer = Terminal()
     anotherone = True
     while anotherone:
-        new_mult_task = multi.make_task()
-        viewer.get_input(viewer.get_task(new_mult_task))
+        get_answer_3_times(viewer, tasker)
         anotherone = False
 
 if __name__ == "__main__":
