@@ -8,15 +8,21 @@ def get_2_ints(_from: int = 1, _to: int = 10) -> list[int]:
     return [random.randint(_from, _to), random.randint(_from, _to)]
 
 class Person():
-    def __init__(self, viewer):
+    def __init__(self, viewer: Viewer):
         self.points = 5
-        self.name = self.get_name(viewer)
+        self.viewer = viewer
+        self.name = self.get_name()
+
+    def get_name(self):
+        return self.viewer.get_name("Wie heißt Du? ")
 
 class Viewer(Protocol):
     @abstractmethod
     def output(self) -> None: ...
     @abstractmethod
-    def get_input(self) -> int:...
+    def get_input(self, str) -> int:...
+    @abstractmethod
+    def get_name(self, str) -> str:...
 
 class Terminal(Viewer):
     def output(self, txt_list: list[str]) -> None:
@@ -35,6 +41,9 @@ class Terminal(Viewer):
 
     def get_input(self, txt: str) -> int:
         return int(input(txt))
+    
+    def get_name(self, txt: str) -> str:
+        return input(txt)
     
     def start(self) -> None:
         self.output(self.header())
@@ -75,6 +84,8 @@ def get_answer_3_times(viewer, tasker):
 def main():
     tasker = Multiplizieren()
     viewer = Terminal()
+    people = []
+    people.append(Person(viewer))
     anotherone = True
     while anotherone:
         get_answer_3_times(viewer, tasker)
