@@ -7,15 +7,6 @@ def get_2_ints(_from: int = 1, _to: int = 10) -> list[int]:
     if _from > _to: _from, _to = _to, _from
     return [random.randint(_from, _to), random.randint(_from, _to)]
 
-class Person():
-    def __init__(self, viewer: Viewer):
-        self.points = 5
-        self.viewer = viewer
-        self.name = self.get_name()
-
-    def get_name(self):
-        return self.viewer.get_name("Wie heißt Du? ")
-
 class Viewer(Protocol):
     @abstractmethod
     def output(self) -> None: ...
@@ -52,12 +43,18 @@ class Terminal(Viewer):
     def get_task(self, task: list = []) -> str:
         return("{} {} {} = ".format(*task))
 
+class Person():
+    def __init__(self, name):
+        self.points = 5
+        self.name = name
+
 class Task(Protocol):
     symbol: str
 
-    @abstractmethod
-    def make_task(self) -> list:
-        ...
+    def make_task(self, _from: int = 1, _to: int = 10):
+        self.a, self.b = get_2_ints(_from, _to)
+        return [self.a, self.symbol, self.b]
+    
     @abstractmethod
     def get_result(self) -> int:
         ...
@@ -65,10 +62,6 @@ class Task(Protocol):
 class Multiplizieren(Task):
     def __init__(self):
         self.symbol = "x"
-
-    def make_task(self, _from: int = 1, _to: int = 10):
-        self.a, self.b = get_2_ints(_from, _to)
-        return [self.a, self.symbol, self.b]
     
     def get_result(self):
         return self.a*self.b
@@ -80,6 +73,10 @@ def get_answer_3_times(viewer, tasker):
         if ans == tasker.get_result():
             return True
     return False
+
+class Game(tasker, viewer):
+    
+
 
 def main():
     tasker = Multiplizieren()
