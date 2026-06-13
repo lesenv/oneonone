@@ -74,9 +74,9 @@ def get_answer_3_times(viewer, tasker):
             return True
     return False
 
-class Game(tasker, viewer):
-    
-
+class Game():
+    def __init__(self, tasker, viewer):
+        pass
 
 def main():
     tasker = Multiplizieren()
