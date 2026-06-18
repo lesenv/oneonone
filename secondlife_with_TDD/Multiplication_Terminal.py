@@ -1,46 +1,7 @@
-import random
 from collections import deque as collectionsdeque
-import view as vw #import Terminal, MENU_CODES, EXIT, NEW_PLAYER
-from typing import Protocol
-from abc import abstractmethod
-
-def get_2_ints(_from: int = 1, _to: int = 10) -> list[int]:
-    if _from > _to: _from, _to = _to, _from
-    return [random.randint(_from, _to), random.randint(_from, _to)]
-
-class Person():
-    joined = 0
-
-    def __init__(self, name):
-        self.lives = 5
-        self.name = name
-        self.joined = Person.joined
-        Person.joined += 1
-
-
-    def change_life(self, change: bool = False):
-        if change:
-            self.lives += 1
-        else:
-            self.lives -= 1
-
-class Task(Protocol):
-    symbol: str
-
-    def make_task(self, _from: int = 1, _to: int = 10):
-        self.a, self.b = get_2_ints(_from, _to)
-        return [self.a, self.symbol, self.b]
-    
-    @abstractmethod
-    def get_result(self) -> int:
-        ...
-
-class Multiplizieren(Task):
-    def __init__(self):
-        self.symbol = "x"
-    
-    def get_result(self):
-        return self.a*self.b
+from person import Person
+import view as vw
+import task as t
 
 class Game():
     def __init__(self, tasker, viewer):
@@ -78,7 +39,7 @@ class Game():
 
     def start_game(self):
         while any(f.lives for f in self.people):
-            self.people.rotate()
+            self.people.rotate(1)
             active_person = self.people[0]
             if not active_person.lives:
                 continue
@@ -98,7 +59,7 @@ class Game():
 
 
 def main():
-    game = Game(Multiplizieren(), vw.Terminal())
+    Game(t.Multiplizieren(), vw.Terminal())
 
 if __name__ == "__main__":
     main()

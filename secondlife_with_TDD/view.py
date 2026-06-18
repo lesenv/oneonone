@@ -10,17 +10,21 @@ MENU_CODES = [EXIT,
               NEW_PLAYER,
               HELP]
 
-
-
 class Viewer(Protocol):
     @abstractmethod
     def output(self) -> None: ...
+
     @abstractmethod
     def get_input(self, str) -> int:...
+
     @abstractmethod
     def get_new_name(self, str) -> str:...
+
     @abstractmethod
     def new_menu() -> None: ...
+
+    @abstractmethod
+    def print_help() -> None: ...
 
 class Terminal(Viewer):
     def start(self, people: list[Person]) -> None:
@@ -32,7 +36,10 @@ class Terminal(Viewer):
         for p in sorted_people:
             prefix = ">> " if p == active else "   "
             grid = f"{(tabnum_from_names[p.name])*' '}"
-            self.output([prefix + f"{p.joined} {p.name}: {grid}{"O"*p.lives}"])
+            line = prefix + f"{p.joined} {p.name}: {grid}{"O"*p.lives}"
+            if not p.lives:
+                line = '\033[91m'+line+'\033[0m'
+            self.output([line])
         self.output()
 
     def print_help(self):
