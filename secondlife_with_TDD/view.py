@@ -2,11 +2,13 @@ import subprocess, os # just for Terminal
 from typing import Protocol
 from abc import abstractmethod
 
-EXIT = "zzz"
+EXIT       = "zzz"
 NEW_PLAYER = "ppp"
+HELP       = "hhh"
 
 MENU_CODES = [EXIT,
-              NEW_PLAYER]
+              NEW_PLAYER,
+              HELP]
 
 
 
@@ -17,6 +19,8 @@ class Viewer(Protocol):
     def get_input(self, str) -> int:...
     @abstractmethod
     def get_new_name(self, str) -> str:...
+    @abstractmethod
+    def new_menu() -> None: ...
 
 class Terminal(Viewer):
     def start(self, people: list[Person]) -> None:
@@ -24,12 +28,15 @@ class Terminal(Viewer):
         tabnum_from_names = {p.name: maxtabs - len(p.name) for p in people}
         self.output(self.header())
         active = people[0]
-        sorted_people= sorted(people, key= lambda n: n.name)
+        sorted_people= sorted(people, key= lambda n: n.joined)
         for p in sorted_people:
             prefix = ">> " if p == active else "   "
             grid = f"{(tabnum_from_names[p.name])*' '}"
-            self.output([prefix + f" {p.name}: {grid}{"O"*p.lives}"])
+            self.output([prefix + f"{p.joined} {p.name}: {grid}{"O"*p.lives}"])
         self.output()
+
+    def print_help(self):
+        self.output(self.output_help_menu())
 
     def output(self, txt_list: list[str] = None) -> None:
         # only method to print
@@ -39,6 +46,9 @@ class Terminal(Viewer):
                 print(f"{txt}")
         else:
             print()
+
+    def new_menu(self):
+        self.clear_display()
 
     def clear_display(self):
         subprocess.call('cls' if os.name == 'nt' else 'clear')
