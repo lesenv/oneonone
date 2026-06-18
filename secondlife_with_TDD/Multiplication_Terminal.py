@@ -16,15 +16,25 @@ class Game():
 
         self.menu_codes = {vw.EXIT: self.break_,
                            vw.NEW_PLAYER: self.add_Person,
-                           vw.HELP: self.viewer.print_help}
+                           vw.HELP: self.print_help}
 
         self.start_game()
+
+    def print_help(self):
+        self.viewer.output(self.output_help_menu)
+
+    def output_help_menu(self) -> str:
+        out = ["hhh - print this menu",
+               "ppp - add a player",
+               "zzz - exit the game"]
+        input(out)
+        return out
 
     def break_(self, p: Person= None) -> None:
         if p:
             self.viewer.closing([f"\033[92m Wow, {p.name} hat gewonnen! \033[0m"])
         else:
-            self.people = []
+            self.people.clear()
             self.viewer.closing()
 
     def add_Person(self):
@@ -37,6 +47,8 @@ class Game():
             if ans in vw.MENU_CODES:
                 self.viewer.new_menu()
                 self.menu_codes[ans]()
+                if ans == vw.HELP:
+                    input()
                 return False
             elif ans == self.tasker.get_result():
                 return True
@@ -49,7 +61,11 @@ class Game():
             active_person = self.people[0]
             if not active_person.lives:
                 continue
-            self.viewer.start(self.people)
+            sorted_names = [str(p.name) for p in sorted(self.people, key= lambda n: n.joined)]
+            dict_lives_from_name = {p.name: p.lives for p in self.people}
+            self.viewer.out_names(sorted_names,
+                                  dict_lives_from_name,
+                                  active_person.name)
             active_person.change_life(self.get_answer_3_times())
         else:
             self.break_(p = self.people[0] if active_person.lives == self.cond_win else [])

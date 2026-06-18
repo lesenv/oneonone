@@ -1,5 +1,6 @@
 import subprocess, os # just for Terminal
 from view_abstract import *
+from person import Person
 
 '''
 class bcolors:
@@ -15,23 +16,17 @@ class bcolors:
 '''
 
 class Terminal(Viewer):
-    def start(self, people: list[Person]) -> None:
-        maxtabs = (max( length for length in [len(p.name) for p in people] ))
-        tabnum_from_names = {p.name: maxtabs - len(p.name) for p in people}
+    def out_names(self, p_list: list[str], lives: dict = {}, active: str = "") -> None:
         self.output(self.header())
-        active = people[0]
-        sorted_people= sorted(people, key= lambda n: n.joined)
-        for p in sorted_people:
+        maxtabs = (max( length for length in [len(p) for p in p_list] ))
+        for p in p_list:
             prefix = ">> " if p == active else "   "
-            grid = f"{(tabnum_from_names[p.name])*' '}"
-            line = prefix + f"{p.joined} {p.name}: {grid}{"O"*p.lives}"
-            if not p.lives:
+            grid = f"{(maxtabs - len(p))*' '}"
+            line = prefix + f"{p}: {grid}{"O"*lives[p]}"
+            if not lives[p]:
                 line = '\033[91m' + line + '\033[0m' # line in red
             self.output([line])
         self.output()
-
-    def print_help(self):
-        self.output(self.output_help_menu())
 
     def output(self, txt_list: list[str] = None) -> None:
         # only method to print
@@ -58,12 +53,6 @@ class Terminal(Viewer):
     def seperate_line(self) -> str:
         return "================"
     
-    def output_help_menu(self) -> str:
-        out = ["hhh - print this menu",
-               "ppp - add a player",
-               "zzz - exit the game"]
-        return out
-
     def get_input(self, txt: str) -> int:
         try:
             return int(input(txt))
