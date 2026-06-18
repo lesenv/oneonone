@@ -1,15 +1,12 @@
 from collections import deque as collectionsdeque
 from person import Person
-import view_terminal as vw
+import view_flask as vw
 import task as t
 
-WIN_CONDITIION = 10
-
 class Game():
-    def __init__(self, tasker, viewer, cond_win = WIN_CONDITIION):
+    def __init__(self, tasker, viewer):
         self.tasker = tasker
         self.viewer = viewer
-        self.cond_win = cond_win
 
         self.people = collectionsdeque()
         self.add_Person()
@@ -20,12 +17,9 @@ class Game():
 
         self.start_game()
 
-    def break_(self, p: Person= None) -> None:
-        if p:
-            self.viewer.closing([f"\033[92m Wow, {p.name} hat gewonnen! \033[0m"])
-        else:
-            self.people = []
-            self.viewer.closing()
+    def break_(self):
+        self.people = []
+        self.viewer.closing()
 
     def add_Person(self):
         self.people.append(Person(self.viewer.get_new_name()))
@@ -43,8 +37,7 @@ class Game():
         return False
 
     def start_game(self):
-        while any(f.lives for f in self.people) and \
-              all(f.lives < self.cond_win for f in self.people):
+        while any(f.lives for f in self.people):
             self.people.rotate(1)
             active_person = self.people[0]
             if not active_person.lives:
@@ -52,7 +45,9 @@ class Game():
             self.viewer.start(self.people)
             active_person.change_life(self.get_answer_3_times())
         else:
-            self.break_(p = self.people[0] if active_person.lives == self.cond_win else [])
+            self.break_()
+
+
 
 def main():
     Game(t.Multiplizieren(), vw.Terminal())

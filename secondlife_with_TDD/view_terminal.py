@@ -1,26 +1,18 @@
 import subprocess, os # just for Terminal
-from typing import Protocol
-from abc import abstractmethod
+from view_abstract import *
 
-EXIT       = "zzz"
-NEW_PLAYER = "ppp"
-HELP       = "hhh"
-
-MENU_CODES = [EXIT,
-              NEW_PLAYER,
-              HELP]
-
-
-
-class Viewer(Protocol):
-    @abstractmethod
-    def output(self) -> None: ...
-    @abstractmethod
-    def get_input(self, str) -> int:...
-    @abstractmethod
-    def get_new_name(self, str) -> str:...
-    @abstractmethod
-    def new_menu() -> None: ...
+'''
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+'''
 
 class Terminal(Viewer):
     def start(self, people: list[Person]) -> None:
@@ -85,6 +77,8 @@ class Terminal(Viewer):
     def get_task(self, task: list = []) -> str:
         return("{} {} {} = ".format(*task))
     
-    def closing(self):
+    def closing(self, textlist: list[str] = []):
         self.clear_display()
+        if textlist:
+            self.output(textlist)
         self.output(["", "Schön war's", "Bis zum nächsten Mal!"])
