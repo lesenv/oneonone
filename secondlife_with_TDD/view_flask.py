@@ -1,26 +1,5 @@
-import subprocess, os # just for Terminal
-from typing import Protocol
-from abc import abstractmethod
-
-EXIT       = "zzz"
-NEW_PLAYER = "ppp"
-HELP       = "hhh"
-
-MENU_CODES = [EXIT,
-              NEW_PLAYER,
-              HELP]
-
-
-
-class Viewer(Protocol):
-    @abstractmethod
-    def output(self) -> None: ...
-    @abstractmethod
-    def get_input(self, str) -> int:...
-    @abstractmethod
-    def get_new_name(self, str) -> str:...
-    @abstractmethod
-    def new_menu() -> None: ...
+from flask import app
+from view_abstract import *
 
 class Terminal(Viewer):
     def start(self, people: list[Person]) -> None:
