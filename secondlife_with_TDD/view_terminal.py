@@ -1,6 +1,5 @@
 import subprocess, os # just for Terminal
 from view_abstract import *
-from person import Person
 
 '''
 class bcolors:

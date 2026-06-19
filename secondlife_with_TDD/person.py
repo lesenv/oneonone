@@ -3,7 +3,7 @@ class Person:
 
     def __init__(self, name):
         self.name = name
-        self.lives = 9
+        self.lives = 5
 
         self.joined = Person.joined
         Person.joined += 1
