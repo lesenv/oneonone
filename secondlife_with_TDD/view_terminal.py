@@ -15,24 +15,6 @@ class bcolors:
 '''
 
 class Terminal(Viewer):
-    def start(self, people: list[Person]) -> None:
-        maxtabs = (max( length for length in [len(p.name) for p in people] ))
-        tabnum_from_names = {p.name: maxtabs - len(p.name) for p in people}
-        self.output(self.header())
-        active = people[0]
-        sorted_people= sorted(people, key= lambda n: n.joined)
-        for p in sorted_people:
-            prefix = ">> " if p == active else "   "
-            grid = f"{(tabnum_from_names[p.name])*' '}"
-            line = prefix + f"{p.joined} {p.name}: {grid}{"O"*p.lives}"
-            if not p.lives:
-                line = '\033[91m' + line + '\033[0m' # line in red
-            self.output([line])
-        self.output()
-
-    def print_help(self):
-        self.output(self.output_help_menu())
-
     def output(self, txt_list: list[str] = None) -> None:
         # only method to print
         # all the others are returning the strings
@@ -48,9 +30,9 @@ class Terminal(Viewer):
     def clear_display(self):
         subprocess.call('cls' if os.name == 'nt' else 'clear')
     
-    def header(self) -> str:
+    def header(self, title: str = "") -> str:
         self.clear_display()
-        txt = ["1x1-Übungen -..-''-..-''# help: type 'hhh'"]
+        txt = [title]
         txt.append("")
         txt.append(self.seperate_line())
         return txt
@@ -58,12 +40,6 @@ class Terminal(Viewer):
     def seperate_line(self) -> str:
         return "================"
     
-    def output_help_menu(self) -> str:
-        out = ["hhh - print this menu",
-               "ppp - add a player",
-               "zzz - exit the game"]
-        return out
-
     def get_input(self, txt: str) -> int:
         try:
             return int(input(txt))
@@ -79,6 +55,4 @@ class Terminal(Viewer):
     
     def closing(self, textlist: list[str] = []):
         self.clear_display()
-        if textlist:
-            self.output(textlist)
-        self.output(["", "Schön war's", "Bis zum nächsten Mal!"])
+        self.output(textlist)
