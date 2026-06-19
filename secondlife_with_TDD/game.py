@@ -11,6 +11,8 @@ class Game():
         self.viewer = viewer
         self.cond_win = cond_win
 
+        self.title="1x1-Übungen -..-''-..-''# help: type 'hhh'"
+
         self.people = collectionsdeque()
         self.add_Person()
 
@@ -33,7 +35,7 @@ class Game():
     def break_(self, p: Person= None) -> None:
         if p:
             # p won
-            self.viewer.closing([f"\033[92m Wow, {p.name} hat gewonnen! \033[0m"])
+            self.viewer.closing([f"\033[92m    Wow, {p.name} hat gewonnen! \033[0m"])
         else:
             # break manually
             self.people.clear()
@@ -57,8 +59,8 @@ class Game():
     def out_names(self, active) -> None:
         outlist = []
         maxtabs = (max( length for length in [len(p.name) for p in self.people] ))
-        for p in self.people:
-            prefix = ">> " if p == active else "   "
+        for p in sorted(self.people, key = lambda d: d.joined):
+            prefix = ">>>> " if p == active else "     "
             grid = f"{(maxtabs - len(p.name))*' '}"
             line = prefix + f"{p.name}: {grid}{"O"*p.lives}"
             if not p.lives:
@@ -69,7 +71,7 @@ class Game():
     def start_game(self):
         while any(f.lives for f in self.people) and \
               all(f.lives < self.cond_win for f in self.people):
-            self.viewer.output(self.viewer.header("1x1-Übungen -..-''-..-''# help: type 'hhh'"))
+            self.viewer.output(self.viewer.header(self.title))
             self.people.rotate(1)
             active_person = self.people[0]
             if not active_person.lives:
