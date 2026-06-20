@@ -1,6 +1,6 @@
-import subprocess, os # just for Terminal
 from view_abstract import *
-from flask import app
+from flask_app.app_factory import app
+from flask import request, render_template
 
 '''
 class bcolors:
@@ -14,22 +14,40 @@ class bcolors:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 '''
+@app.route('/')
+def index():
+    if request:
+        answer = request.get_data("POST")
+        print(answer)
+        out(answer)
+    return render_template("table.html")
 
-class FlaskApp(Viewer):
-    def output(self, txt_list: list[str] = None) -> None:
+@app.route("/output", methods=['GET', 'POST'])
+def out(liststr):
+    return liststr
+
+class FlaskViewer(Viewer):
+    def __init__(self):
+        app.run(debug=True)
+
+    @app.route("/output", methods=['GET', 'POST'])
+    def output(self) -> None:
         # only method to print
         # all the others are returning the strings
+        if request.method == 'POST':
+           txt_list = request.form['username']
         if type(txt_list) == list:
             for txt in txt_list:
                 print(f"{txt}")
         else:
             print()
+        return render_template("table.html")
 
     def new_menu(self):
         self.clear_display()
 
     def clear_display(self):
-        subprocess.call('cls' if os.name == 'nt' else 'clear')
+        pass#subprocess.call('cls' if os.name == 'nt' else 'clear')
     
     def header(self, title: str = "") -> str:
         self.clear_display()
@@ -41,11 +59,22 @@ class FlaskApp(Viewer):
     def seperate_line(self) -> str:
         return "================"
     
+    @app.route("/get_input", methods=['GET', 'POST'])
     def get_input(self, txt: str) -> int:
+
+        if request.method == 'POST':
+           txt_list = request.form['username']
+        if type(txt_list) == list:
+            for txt in txt_list:
+                print(f"{txt}")
+        else:
+            print()
+        return render_template("table.html")
+        """ 
         try:
             return int(input(txt))
         except ValueError as e:
-            return str(e)[-4:-1]
+            return str(e)[-4:-1] """
     
     def get_new_name(self, txt: str = "Wie heißt Du? ") -> str:
         self.clear_display()
