@@ -40,6 +40,10 @@ class Terminal(Viewer):
     def seperate_line(self) -> str:
         return "================"
     
+    def print_help(self, menu: list[str]) -> None:
+        self.output(menu)
+        input()
+    
     def get_input(self, txt: str) -> int:
         try:
             return int(input(txt))
@@ -56,3 +60,4 @@ class Terminal(Viewer):
     def closing(self, textlist: list[str] = []):
         self.clear_display()
         self.output(textlist)
+        
