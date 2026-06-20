@@ -1,7 +1,6 @@
 from collections import deque as collectionsdeque
 from person import Person
 import view_terminal as vw
-import task as t
 
 WIN_CONDITION = 10
 
@@ -23,13 +22,12 @@ class Game():
         self.start_game()
 
     def print_help(self):
-        self.viewer.output(self.output_help_menu)
+        self.viewer.print_help(self.output_help_menu())
 
     def output_help_menu(self) -> str:
         out = ["hhh - print this menu",
                "ppp - add a player",
                "zzz - exit the game"]
-        input(out)
         return out
 
     def break_(self, p: Person= None) -> None:
@@ -49,6 +47,7 @@ class Game():
         for _ in range(3):
             ans = self.viewer.get_input(self.viewer.get_task(new_mult_task))
             if ans in vw.MENU_CODES:
+                self.people[0].change_life(True)
                 self.viewer.new_menu()
                 self.menu_codes[ans]()
                 return False
@@ -80,3 +79,4 @@ class Game():
             active_person.change_life(self.get_answer_3_times())
         else:
             self.break_(p = self.people[0] if active_person.lives == self.cond_win else [])
+            

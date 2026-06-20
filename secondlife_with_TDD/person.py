@@ -10,3 +10,4 @@ class Person:
 
     def change_life(self, plus: bool = True):
         self.lives += 1 if plus else -1
+        

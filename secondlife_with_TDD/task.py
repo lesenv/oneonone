@@ -24,3 +24,4 @@ class Multiplizieren(Task):
     
     def get_result(self):
         return self.a*self.b
+    
