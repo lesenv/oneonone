@@ -14,9 +14,16 @@ MENU_CODES = [EXIT,
 class Viewer(Protocol):
     @abstractmethod
     def output(self) -> None: ...
+
     @abstractmethod
     def get_input(self, str) -> int:...
+
     @abstractmethod
     def get_new_name(self, str) -> str:...
+
     @abstractmethod
     def new_menu() -> None: ...
+
+    @abstractmethod
+    def closing(self, list[str]) -> None: ...
+    

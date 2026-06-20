@@ -1,5 +1,6 @@
 import subprocess, os # just for Terminal
 from view_abstract import *
+from flask import app
 
 '''
 class bcolors:
@@ -14,7 +15,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 '''
 
-class Terminal(Viewer):
+class FlaskApp(Viewer):
     def output(self, txt_list: list[str] = None) -> None:
         # only method to print
         # all the others are returning the strings
