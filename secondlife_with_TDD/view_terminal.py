@@ -15,7 +15,7 @@ class bcolors:
 '''
 
 class Terminal(Viewer):
-    def output(self, txt_list: list[str] = None) -> None:
+    def read_input_number(self, txt_list: list[str] = None) -> None:
         # only method to print
         # all the others are returning the strings
         if type(txt_list) == list:
@@ -55,4 +55,4 @@ class Terminal(Viewer):
     
     def closing(self, textlist: list[str] = []):
         self.clear_display()
-        self.output(textlist)
+        self.read_input_number(textlist)
