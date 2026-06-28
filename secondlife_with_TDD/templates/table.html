@@ -6,11 +6,6 @@
 <body>
     <form method="post">
     <div id="Aufgabe">
-        <div name="alte_Aufgaben">
-            {* for i in range(len(old_tries)) *}
-            <span style="text-justify: right;">old_tries[i]</span>
-            {* endfor *}
-        </div>
             <span id="a">3</span>
             <span id="op">x</span>
             <span id="b">4</span>
@@ -19,6 +14,11 @@
                 {* <input name="c_input" type="text"/> *}
             </span>
             <br><br>
+        <div name="alte_Aufgaben">
+            {%for i in range(len)%}
+            <div style="text-justify: right; color: red">{{ old_tries[i] }}</div>
+            {%endfor%}
+        </div>
             <input type="submit" name="abgeschickt" Value="Vesuch">
         </div>
     </form>

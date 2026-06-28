@@ -12,7 +12,9 @@ class Game():
         self.cond_win = cond_win
 
         self.title="1x1-Übungen -..-''-..-''# help: type 'hhh'"
-
+        """ 
+        title goes in the view_terminal
+        """
         self.people = collectionsdeque()
         self.add_Person()
 

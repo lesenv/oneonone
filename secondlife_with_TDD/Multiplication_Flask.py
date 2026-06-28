@@ -8,6 +8,7 @@ def index():
  """
 def main():
     g = Game(t.Multiplizieren(), vw.FlaskViewer())
+    g.run(debug=True, port=1234)
 
 if __name__ == "__main__":
     main()
