@@ -1,17 +1,17 @@
 from typing import Protocol
 from abc import abstractmethod
-
-EXIT       = "zzz"
-NEW_PLAYER = "ppp"
-HELP       = "hhh"
-
-MENU_CODES = [EXIT,
-              NEW_PLAYER,
-              HELP]
-
-
+from enum import StrEnum
 
 class Viewer(Protocol):
+    class CONSTS(StrEnum):
+        EXIT       = "zzz"
+        NEW_PLAYER = "ppp"
+        HELP       = "hhh"
+
+
+    MENU_CODES = {c.name: c.value for c in CONSTS}
+
+
     @abstractmethod
     def read_input_number(self) -> None: ...
 

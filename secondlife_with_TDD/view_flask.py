@@ -1,4 +1,4 @@
-from view_abstract import *
+import view_abstract as v_a
 from flask import Flask, request, render_template, redirect
 
 '''
@@ -14,7 +14,7 @@ class bcolors:
     UNDERLINE = '\033[4m'
 '''
 
-class FlaskViewer(Viewer):
+class FlaskViewer(v_a.Viewer):
     @property
     def app(self) -> Flask:
         return self._app
@@ -96,6 +96,9 @@ class FlaskViewer(Viewer):
             return int(input(txt))
         except ValueError as e:
             return str(e)[-4:-1] """
+        
+    def output(self, txt):
+        pass
     
     def get_new_name(self, txt: str = "Wie heißt Du? ") -> str:
         self.clear_display()

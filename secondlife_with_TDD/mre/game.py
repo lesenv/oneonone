@@ -8,7 +8,6 @@ class Game():
         self.tasker = tasker
         self.viewer = viewer
         self.cond_win = cond_win
-        self.won = False
 
         self.title="1x1-Übungen -..-''-..-''# help: type 'hhh'"
         """ 
@@ -17,9 +16,9 @@ class Game():
         self.people = collectionsdeque()
         self.add_Person()
 
-        self.menu_codes = {self.viewer.MENU_CODES[self.viewer.CONSTS.EXIT.name]: self.break_,
-                           self.viewer.MENU_CODES[self.viewer.CONSTS.NEW_PLAYER.name]: self.add_Person,
-                           self.viewer.MENU_CODES[self.viewer.CONSTS.HELP.name]: self.print_help}
+        self.menu_codes = {self.viewer.consts.EXIT: self.break_,
+                           self.viewer.consts.NEW_PLAYER: self.add_Person,
+                           self.viewer.consts.HELP: self.print_help}
 
         self.start_game()
 
@@ -37,11 +36,10 @@ class Game():
         if p:
             # p won
             self.viewer.closing([f"\033[92m    Wow, {p.name} hat gewonnen! \033[0m"])
-            self.won = True
-        elif not self.won:
+        else:
+            # break manually
+            self.people.clear()
             self.viewer.closing(["", "Schön war's", "Bis zum nächsten Mal!"])
-        # break manually
-        self.people.clear()
 
     def add_Person(self):
         self.people.append(Person(self.viewer.get_new_name()))
@@ -50,7 +48,7 @@ class Game():
         new_mult_task = self.tasker.make_task()
         for _ in range(3):
             ans = self.viewer.get_input(self.viewer.get_task(new_mult_task))
-            if ans in self.viewer.MENU_CODES.values():
+            if ans in self.viewer.MENU_CODES:
                 self.viewer.new_menu()
                 self.menu_codes[ans]()
                 return False
@@ -77,11 +75,8 @@ class Game():
             self.people.rotate(1)
             active_person = self.people[0]
             if not active_person.lives:
-                if sum([1 for f in self.people if f.lives]) == 1:
-                    winner = [p for  p in self.people if p.lives]
-                    self.break_(p = [p for  p in self.people if p.lives][0])
                 continue
             self.viewer.output(self.out_names(active_person))
             active_person.change_life(self.get_answer_3_times())
         else:
-            self.break_(p = active_person if active_person.lives == self.cond_win else [])
+            self.break_(p = self.people[0] if active_person.lives == self.cond_win else [])

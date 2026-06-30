@@ -1,5 +1,5 @@
 import subprocess, os # just for Terminal
-from view_abstract import *
+from view_abstract import Viewer
 
 '''
 class bcolors:
@@ -56,3 +56,10 @@ class Terminal(Viewer):
     def closing(self, textlist: list[str] = []):
         self.clear_display()
         self.read_input_number(textlist)
+
+    def output(self, txt_list: list[str] = []):
+        if type(txt_list) == type([]):
+            for txt in txt_list:
+                print(txt)
+        else:
+            print("")
